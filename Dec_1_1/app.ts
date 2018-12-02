@@ -1,7 +1,21 @@
 
-import * as http from "https";
+
+import * as fs from "fs";
 
 
-http.get("https://adventofcode.com/2018/day/1/input", (response)=>{
+async function main(){
+    let data = await readInput();
+    console.log(data);
+}
 
-});
+async function readInput(){
+    return new Promise((res,rej)=>{
+        fs.readFile("./dec_1_1/input.txt", (err, data)=> {
+            let text = data.toString();
+            res(text);
+        });
+    });
+}
+
+main();
+
