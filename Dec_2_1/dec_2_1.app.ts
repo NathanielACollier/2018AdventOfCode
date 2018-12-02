@@ -29,10 +29,38 @@ What is the checksum for your list of box IDs?
 
 async function main(){
     let entries = await utility.readInput("./dec_2_1/input.txt");
-    console.log(entries.length);
+    let twoOfAnyLetter = 0;
+    let threeOfAnyLetter = 0;
+    
+    for( let e of entries){
+        let countDict = letterCount(e);
+        let eTwoLetterCount = Object.keys(countDict).filter((key)=>{
+            return countDict[key] === 2;
+        }).length;
 
+        let eThreeLetterCount = Object.keys(countDict).filter((key)=>{
+            return countDict[key] === 3;
+        }).length;
+
+        twoOfAnyLetter += eTwoLetterCount ? 1 : 0;
+        threeOfAnyLetter += eThreeLetterCount ? 1: 0;
+    }
+
+    console.log(`Two of any letter: ${twoOfAnyLetter}`);
+    console.log(`Three of any letter: ${threeOfAnyLetter}`);
+    console.log(`Checksum is: ${twoOfAnyLetter * threeOfAnyLetter}`);
 }
 
+function letterCount(entry: string) {
+    let dict: {[key:string]: number} = {};
+    for( let letter of entry){
+        if( !dict[letter]){
+            dict[letter] = 0;
+        }
+        dict[letter]++;
+    }
+    return dict;
+}
 
 main();
 
