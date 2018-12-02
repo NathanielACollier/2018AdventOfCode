@@ -1,3 +1,5 @@
+import { utility } from "../common/utility";
+
 /*
 After feeling like you've been falling for a few minutes, you look at the device's tiny screen. "Error: Device must be calibrated before first use. Frequency drift detected. Cannot maintain destination lock." Below the message, the device shows a sequence of changes in frequency (your puzzle input). A value like +6 means the current frequency increases by 6; a value like -3 means the current frequency decreases by 3.
 
@@ -17,14 +19,12 @@ Here are other example situations:
 Starting with a frequency of zero, what is the resulting frequency after all of the changes in frequency have been applied?
 */
 
-import * as fs from "fs";
+
 
 
 async function main(){
-    let data = await readInput();
-    let entries = data.split("\n").filter((val)=>{
-        return val && val.length > 0;
-    }).map((val)=>{
+
+    let entries = (await utility.readInput('./dec_1_1/input.txt')).map((val)=>{
         return +val;
     });
     let sum = entries.reduce((prev,current)=>{
@@ -33,14 +33,6 @@ async function main(){
     console.log(`Answer is ${sum}`);
 }
 
-async function readInput(){
-    return new Promise<string>((res,rej)=>{
-        fs.readFile("./dec_1_1/input.txt", (err, data)=> {
-            let text = data.toString();
-            res(text);
-        });
-    });
-}
 
 main();
 

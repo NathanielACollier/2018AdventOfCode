@@ -1,3 +1,5 @@
+import { utility } from "../common/utility";
+
 /*
 --- Part Two ---
 You notice that the device repeats the same frequency change list over and over. To calibrate the device, you need to find the first frequency it reaches twice.
@@ -23,9 +25,6 @@ What is the first frequency your device reaches twice?
 
 */
 
-import * as fs from "fs";
-
-
 async function main(){
     let freqMap: Map<Number,number> = new Map([]);
     let recordFreq = (freq:number)=>{
@@ -35,10 +34,7 @@ async function main(){
 
         freqMap[freq]++
     };
-    let data = await readInput();
-    let entries = data.split("\n").filter((val)=>{
-        return val && val.length > 0;
-    }).map((val)=>{
+    let entries = (await utility.readInput('./dec_1_2/input.txt')).map((val)=>{
         return +val;
     });
     let firstRepeated = undefined;
@@ -65,15 +61,6 @@ async function main(){
     if( firstRepeated ){
         console.log(`First Repeated is: ${firstRepeated}`);
     }
-}
-
-async function readInput(){
-    return new Promise<string>((res,rej)=>{
-        fs.readFile("./dec_1_1/input.txt", (err, data)=> {
-            let text = data.toString();
-            res(text);
-        });
-    });
 }
 
 main();
