@@ -26,7 +26,7 @@ What is the first frequency your device reaches twice?
 */
 
 async function main(){
-    let freqMap: Map<Number,number> = new Map([]);
+    let freqMap: {[key: string]: number;} = {};
     let recordFreq = (freq:number)=>{
         if(!freqMap[freq]){
             freqMap[freq] = 0;
