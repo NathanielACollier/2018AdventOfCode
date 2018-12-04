@@ -78,7 +78,7 @@ async function main(){
 async function writeFabricToRectangle(fabric: FabricDef, rec: Array<Array<string>>){
     for( let r = fabric.fromTopEdige; r < fabric.height + fabric.fromTopEdige; ++r){
         for( let c = fabric.fromLeftEdge; c < fabric.width + fabric.fromLeftEdge; ++c){
-            rec[r][c] = rec[r][c] + 1;
+            rec[r][c] = (+rec[r][c] + 1) + ""; // convert to number add 1, and convert back to string
         }
     }
 }
