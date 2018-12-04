@@ -53,6 +53,11 @@ interface FabricDef{
     height:number;
 }
 
+interface RectangleDefinition{
+    width: number;
+    height: number;
+}
+
 async function main(){
     let entries = await utility.readInput("./dec_3_1/input.txt");
 
@@ -68,6 +73,29 @@ async function main(){
             height: +height
         };
     });
+
+    let rectDim: RectangleDefinition = {
+        height: fabrics.reduce((prev, curr)=> {
+            let height = curr.fromTopEdige + curr.height;
+            if( height > prev){
+                return height
+            }else {
+                return prev;
+            }
+            
+        },-1),
+        width: fabrics.reduce((prev,cur)=>{
+            let width = cur.fromLeftEdge+cur.width;
+            if( width > prev){
+                return width
+            }else {
+                return prev
+            }
+        },-1)
+    };
+
+    console.log(rectDim);
+
     console.log(fabrics);
 }
 
