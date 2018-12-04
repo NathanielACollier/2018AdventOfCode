@@ -61,7 +61,18 @@ interface RectangleDefinition{
 async function main(){
     let entries = await utility.readInput("./dec_3_1/input.txt");
 
-    let fabrics = entries.map((val)=>{
+    let fabrics = getFabrics(entries);
+
+    let rectDim = getRectangleDimensions(fabrics);
+
+    console.log(rectDim);
+
+    console.log(fabrics);
+}
+
+
+function getFabrics(entries: string[]): FabricDef[]{
+    return entries.map((val)=>{
         let fabircRegex = /#(\d+) @ (\d+),(\d+): (\d+)x(\d+)/;
         let [,id,left,top,width,height] = val.match(fabircRegex);
 
@@ -73,8 +84,11 @@ async function main(){
             height: +height
         };
     });
+}
 
-    let rectDim: RectangleDefinition = {
+
+function getRectangleDimensions(fabrics: FabricDef[]): RectangleDefinition{
+    return {
         height: fabrics.reduce((prev, curr)=> {
             let height = curr.fromTopEdige + curr.height;
             if( height > prev){
@@ -92,11 +106,7 @@ async function main(){
                 return prev
             }
         },-1)
-    };
-
-    console.log(rectDim);
-
-    console.log(fabrics);
+    }
 }
 
 main();
