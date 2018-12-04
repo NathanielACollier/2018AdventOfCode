@@ -65,11 +65,33 @@ async function main(){
 
     let rectDim = getRectangleDimensions(fabrics);
 
-    console.log(rectDim);
-
-    console.log(fabrics);
+    let rect = formBlankRectangle(rectDim);
+    await printRectangleToFile("./output/dec_3_1_rectangle.txt",rect );
 }
 
+async function printRectangleToFile(filePath: string, rect: Array<string[]>){
+    let out = "";
+    for(let row of rect){
+        for(let col of row){
+            out += col;
+        }
+        out += "\n";
+    }
+
+    await utility.writeAllText(filePath, out);
+}
+
+function formBlankRectangle(dim: RectangleDefinition): Array<Array<string>>{
+    let rect = new Array<Array<string>>(dim.height);
+    for(let r = 0; r < dim.height; ++r){
+        let row = new Array<string>(dim.width);
+        for(let c = 0; c < dim.width; ++c){
+            row[c] = ".";
+        }
+        rect[r] = row;
+    }
+    return rect;
+}
 
 function getFabrics(entries: string[]): FabricDef[]{
     return entries.map((val)=>{
