@@ -72,10 +72,27 @@ async function main(){
     }
 
     await printRectangleToFile(rect );
+
+    let squareCount = countSquaresWithTwoOrMore(rect);
+    console.log(`Squares with Two or More: ${squareCount}`);
 }
 
+function countSquaresWithTwoOrMore(rec: Array<Array<string>>){
+    let count = 0;
 
-async function writeFabricToRectangle(fabric: FabricDef, rec: Array<Array<string>>){
+    for(let r = 0; r < rec.length; ++r ){
+        let row = rec[r];
+        for( let c = 0;  c < row.length; ++c ){
+            let overlapCount: number = +row[c];
+            if( overlapCount >= 2){
+                count++;
+            }
+        }
+    }
+    return count;
+}
+
+function writeFabricToRectangle(fabric: FabricDef, rec: Array<Array<string>>){
     for( let r = fabric.fromTopEdige; r < fabric.height + fabric.fromTopEdige; ++r){
         for( let c = fabric.fromLeftEdge; c < fabric.width + fabric.fromLeftEdge; ++c){
             rec[r][c] = (+rec[r][c] + 1) + ""; // convert to number add 1, and convert back to string
