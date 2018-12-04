@@ -66,10 +66,25 @@ async function main(){
     let rectDim = getRectangleDimensions(fabrics);
 
     let rect = formBlankRectangle(rectDim);
-    await printRectangleToFile("./output/dec_3_1_rectangle.txt",rect );
+
+    for( let f of fabrics){
+        writeFabricToRectangle(f, rect);
+    }
+
+    await printRectangleToFile(rect );
 }
 
-async function printRectangleToFile(filePath: string, rect: Array<string[]>){
+
+async function writeFabricToRectangle(fabric: FabricDef, rec: Array<Array<string>>){
+    for( let r = fabric.fromTopEdige; r < fabric.height + fabric.fromTopEdige; ++r){
+        for( let c = fabric.fromLeftEdge; c < fabric.width + fabric.fromLeftEdge; ++c){
+            rec[r][c] = rec[r][c] + 1;
+        }
+    }
+}
+
+
+async function printRectangleToFile( rect: Array<string[]>){
     let out = "";
     for(let row of rect){
         for(let col of row){
@@ -78,7 +93,7 @@ async function printRectangleToFile(filePath: string, rect: Array<string[]>){
         out += "\n";
     }
 
-    await utility.writeAllText(filePath, out);
+    await utility.writeAllText("./output/dec_3_1_rectangle.txt", out);
 }
 
 function formBlankRectangle(dim: RectangleDefinition): Array<Array<string>>{
@@ -86,7 +101,7 @@ function formBlankRectangle(dim: RectangleDefinition): Array<Array<string>>{
     for(let r = 0; r < dim.height; ++r){
         let row = new Array<string>(dim.width);
         for(let c = 0; c < dim.width; ++c){
-            row[c] = ".";
+            row[c] = "0";
         }
         rect[r] = row;
     }
