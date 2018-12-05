@@ -62,7 +62,10 @@ interface TimeRecordType{
 
 interface GuardEventType{
     time: TimeRecordType;
-    tempStatement: string;
+    guardID: number;
+    startShift: boolean;
+    wakesUp: boolean;
+    fallsAsleep: boolean;
 }
 
 async function main(){
@@ -79,8 +82,10 @@ function interpretEntries(entries: string[]): GuardEventType[]{
     for( let e of entries){
         // tackle time portion first
         // es2018; Named Capture Groups: http://2ality.com/2017/05/regexp-named-capture-groups.html
-        let entryRegex = /\[(?<year>\d+)-(?<month>\d+)-(?<day>\d+) (?<hour>\d+):(?<minute>\d+)\] (?<eventStatement>.+)/;
+        let entryRegex = /\[(?<year>\d+)-(?<month>\d+)-(?<day>\d+) (?<hour>\d+):(?<minute>\d+)\] ((G.+#(?<guardID>\d+).+)|(w(?<wakeup>.+))|(f(?<falls>.+)))/;
         let matches = entryRegex.exec(e).groups;
+
+        let guardID = matches["guardID"] && matches["guardID"].length > 0 ? +matches["guardID"] : -1;
 
         let evt = <GuardEventType>{
             time: <TimeRecordType>{
@@ -90,7 +95,10 @@ function interpretEntries(entries: string[]): GuardEventType[]{
                 hour: +matches["hour"],
                 minute: +matches["minute"]
             },
-            tempStatement: matches["eventStatement"]
+            guardID: guardID,
+            startShift: guardID != -1 ? true : false,
+            wakesUp: matches["wakeup"] && matches["wakeup"].length > 0 ? true: false,
+            fallsAsleep: matches["falls"] && matches["falls"].length > 0 ? true: false
         };
         events.push(evt);
     }
