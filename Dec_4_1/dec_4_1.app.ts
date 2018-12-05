@@ -68,13 +68,90 @@ interface GuardEventType{
     fallsAsleep: boolean;
 }
 
+
+interface Guard{
+    ID: number;
+
+    daysOnShift: Map<string,Day>;
+}
+
+interface Day{
+    month: number;
+    day: number;
+    hours: Map<number,Hour>;
+}
+
+interface Hour{
+    hour: number;
+    minuteSleepStatus: string[];
+}
+
+
 async function main(){
     let entries = await utility.readInput("./dec_4_1/input.txt");
 
     let guardEvents = interpretEntries(entries);
     let guardSorted = sortGuardEvents(guardEvents);
+    let guardSleepData = populateGuardAsleepData(guardSorted);
+    console.log(`Event Count: ${guardSleepData.size}`)
+}
 
-    console.log(`Event Count: ${guardSorted.length}`)
+
+function populateGuardAsleepData(events: GuardEventType[]): Map<number,Guard>{
+    let result = new Map<number,Guard>();
+
+    let currentGuardID = -1;
+    let lastTime: TimeRecordType= null;
+
+
+    for( let g of events ){
+        if( g.startShift ){
+            currentGuardID = g.guardID;
+            lastTime = null;
+            if( !result.has(currentGuardID) ){
+                result.set(currentGuardID, <Guard>{
+                    ID: currentGuardID,
+                    daysOnShift: new Map<string, Day>()                  
+                });
+            }
+        }
+
+        let currentGuard = result.get(currentGuardID);
+
+        let dayKey = g.time.month+""+g.time.day;
+        if( !currentGuard.daysOnShift.has(dayKey)){
+            currentGuard.daysOnShift.set(dayKey, <Day>{
+                day : g.time.day,
+                month : g.time.month,
+                hours: new Map<number, Hour>()
+            });
+        }
+        let day: Day = currentGuard.daysOnShift.get(dayKey);
+
+        if( lastTime != null && g.wakesUp ){
+            
+            if( lastTime.hour != g.time.hour){
+                // not sure what to do here
+            }else {
+                if( !day.hours.has(g.time.hour)){
+                    day.hours.set(g.time.hour, <Hour>{
+                        hour: g.time.hour,
+                        minuteSleepStatus : [...Array(60).keys()].map((val)=>{ return "A"}) // start out everyone asleep
+                    });
+                }
+            }
+
+            let hour = day.hours.get(g.time.hour);
+            
+            for( let m = lastTime.minute; m <= g.time.minute; ++m ){
+                hour[m] = "S";
+            }
+        }
+
+        lastTime = g.time;
+    }
+
+    return result;
 }
 
 
