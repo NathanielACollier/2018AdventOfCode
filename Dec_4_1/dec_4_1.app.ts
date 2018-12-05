@@ -87,13 +87,77 @@ interface Hour{
 }
 
 
+interface GuardMaxSleep{
+    ID: number;
+    minutesAsleep: number;
+    minuteWithMostAsleep: MinuteMostAsleep;
+}
+
+
+interface MinuteMostAsleep{
+    minute: number;
+    count: number;
+}
+
+
 async function main(){
     let entries = await utility.readInput("./dec_4_1/input.txt");
 
     let guardEvents = interpretEntries(entries);
     let guardSorted = sortGuardEvents(guardEvents);
     let guardSleepData = populateGuardAsleepData(guardSorted);
-    console.log(`Event Count: ${guardSleepData.size}`)
+
+
+    let maxGuardAsleep = findGuardMaxAsleep(guardSleepData);
+
+    console.log(`
+    \n---- Max Sleep ----
+    \nGuard ID: ${maxGuardAsleep.ID}
+    \nMinutes Asleep: ${maxGuardAsleep.minuteWithMostAsleep}
+    \nminute with most asleep: ${maxGuardAsleep.minuteWithMostAsleep}
+    `);
+}
+
+
+function findGuardMaxAsleep(guards: Map<number,Guard>): GuardMaxSleep{
+    let max: GuardMaxSleep = null;
+
+    for( let g of guards.values()){
+        let totalMinutesAsleep = 0;
+        let asleepMinuteCount = utility.range(0,60).map((val)=>0);
+
+        // go through all the minutes asleep and count them
+        for( let d of g.daysOnShift.values()){
+            for( let h of d.hours.values()){
+                h.minuteSleepStatus.forEach((status,minute)=>{
+                    if( status == "S"){
+                        asleepMinuteCount[minute]++;
+                        totalMinutesAsleep++;
+                    }
+                });
+            }
+        }
+
+        let guardSleepStats = <GuardMaxSleep>{
+            ID: g.ID,
+            minuteWithMostAsleep: asleepMinuteCount.reduce((max: MinuteMostAsleep,curr,minute)=>{
+                if( curr > max.count ){
+                    max.minute = minute;
+                    max.count = curr;
+                }
+                return max;
+            }, <MinuteMostAsleep>{minute:-1,count:0}),
+            minutesAsleep: totalMinutesAsleep
+        };
+
+        if( !max){
+            max = guardSleepStats;
+        }else if( guardSleepStats.minutesAsleep > max.minutesAsleep){
+            max = guardSleepStats;
+        }
+    }
+
+    return max;
 }
 
 
@@ -136,7 +200,7 @@ function populateGuardAsleepData(events: GuardEventType[]): Map<number,Guard>{
                 if( !day.hours.has(g.time.hour)){
                     day.hours.set(g.time.hour, <Hour>{
                         hour: g.time.hour,
-                        minuteSleepStatus : [...Array(60).keys()].map((val)=>{ return "A"}) // start out everyone asleep
+                        minuteSleepStatus : utility.range(0,60).map((val)=>{ return "A"}) // start out everyone asleep
                     });
                 }
             }

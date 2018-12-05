@@ -34,4 +34,7 @@ export namespace utility{
         });
     }
 
+    // from: https://stackoverflow.com/questions/36947847/how-to-generate-range-of-numbers-from-0-to-n-in-es2015-only
+    export function range (start: number, end: number) { return [...Array(1+end-start).keys()].map(v => start+v) }
+
 }
