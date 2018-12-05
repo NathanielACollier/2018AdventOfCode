@@ -72,8 +72,34 @@ async function main(){
     let entries = await utility.readInput("./dec_4_1/input.txt");
 
     let guardEvents = interpretEntries(entries);
+    let guardSorted = sortGuardEvents(guardEvents);
 
-    console.log(`Event Count: ${guardEvents.length}`)
+    console.log(`Event Count: ${guardSorted.length}`)
+}
+
+
+function sortGuardEvents( events: GuardEventType[]): GuardEventType[]{
+    return events.sort((a,b)=>{
+
+        if( a.time.year >b.time.year )
+            return 1; // a greater
+        else if( b.time.year > a.time.year ) return -1; // b greater
+
+        if( a.time.month > b.time.month ) return 1; // a greater
+        else if( b.time.month > a.time.month) return -1; // b greater
+
+        if( a.time.day > b.time.day) return 1;
+        else if( b.time.day > a.time.day) return -1;
+
+        if( a.time.hour > b.time.hour) return 1;
+        else if( b.time.hour > a.time.hour) return -1;
+
+        if( a.time.minute > b.time.minute) return 1;
+        else if( b.time.minute > a.time.minute) return -1;
+
+
+        return 0; // they are equal
+    });
 }
 
 
