@@ -78,18 +78,19 @@ function interpretEntries(entries: string[]): GuardEventType[]{
     let events: GuardEventType[] = [];
     for( let e of entries){
         // tackle time portion first
-        let entryRegex = /\[(\d+)-(\d+)-(\d+) (\d+):(\d+)\] (.+)/;
-        let [,year,month,day,hour,minute,eventStatement] = e.match(entryRegex);
+        // es2018; Named Capture Groups: http://2ality.com/2017/05/regexp-named-capture-groups.html
+        let entryRegex = /\[(?<year>\d+)-(?<month>\d+)-(?<day>\d+) (?<hour>\d+):(?<minute>\d+)\] (?<eventStatement>.+)/;
+        let matches = entryRegex.exec(e).groups;
 
         let evt = <GuardEventType>{
             time: <TimeRecordType>{
-                year: +year,
-                month: +month,
-                day: +day,
-                hour: +hour,
-                minute: +minute
+                year: +matches["year"],
+                month: +matches["month"],
+                day: +matches["day"],
+                hour: +matches["hour"],
+                minute: +matches["minute"]
             },
-            tempStatement: eventStatement
+            tempStatement: matches["eventStatement"]
         };
         events.push(evt);
     }

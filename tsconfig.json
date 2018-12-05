@@ -3,7 +3,7 @@
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "lib": [
-            "ES6"
+            "es2018"
         ],
         "module": "commonjs",
         "moduleResolution": "node",
@@ -13,6 +13,6 @@
         "removeComments": false,
         "sourceMap": false,
         "suppressImplicitAnyIndexErrors": true,
-        "target": "es6"
+        "target": "es2018"
     }
 }
