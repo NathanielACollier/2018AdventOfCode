@@ -113,9 +113,11 @@ async function main(){
     console.log(`
     \n---- Max Sleep ----
     \nGuard ID: ${maxGuardAsleep.ID}
-    \nMinutes Asleep: ${maxGuardAsleep.minuteWithMostAsleep}
-    \nminute with most asleep: ${maxGuardAsleep.minuteWithMostAsleep}
+    \nMinutes Asleep: ${maxGuardAsleep.minutesAsleep}
+    \nminute with most asleep: ${JSON.stringify(maxGuardAsleep.minuteWithMostAsleep)}
     `);
+
+    console.log(`Puzzle Awnser: ${maxGuardAsleep.ID * maxGuardAsleep.minuteWithMostAsleep.minute}`);
 }
 
 
@@ -208,7 +210,7 @@ function populateGuardAsleepData(events: GuardEventType[]): Map<number,Guard>{
             let hour = day.hours.get(g.time.hour);
             
             for( let m = lastTime.minute; m <= g.time.minute; ++m ){
-                hour[m] = "S";
+                hour.minuteSleepStatus[m] = "S";
             }
         }
 
