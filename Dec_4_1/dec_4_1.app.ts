@@ -281,7 +281,8 @@ function populateGuardAsleepData(events: GuardEventType[]): Map<number,Guard>{
 
             let hour = day.hours.get(g.time.hour);
             
-            for( let m = lastTime.minute; m <= g.time.minute; ++m ){
+            // do -1 on the wakeup minute because that minue counts as awake instead of sleeping
+            for( let m = lastTime.minute; m <= g.time.minute-1; ++m ){
                 hour.minuteSleepStatus[m] = "S";
             }
         }
