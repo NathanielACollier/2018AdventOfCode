@@ -1,4 +1,5 @@
 import { utility } from "../common/utility";
+import * as pad from "pad";
 
 /*
 --- Day 4: Repose Record ---
@@ -106,6 +107,8 @@ async function main(){
     let guardEvents = interpretEntries(entries);
     let guardSorted = sortGuardEvents(guardEvents);
     let guardSleepData = populateGuardAsleepData(guardSorted);
+    // map this out to a file
+    mapGuardSleepingToFile("./output/dec_4_1_graph.txt", guardSleepData);
 
 
     let maxGuardAsleep = findGuardMaxAsleep(guardSleepData);
@@ -118,6 +121,52 @@ async function main(){
     `);
 
     console.log(`Puzzle Awnser: ${maxGuardAsleep.ID * maxGuardAsleep.minuteWithMostAsleep.minute}`);
+}
+
+
+function mapGuardSleepingToFile(filePath: string, guards: Map<number,Guard>):void{
+    let graph = "";
+    
+    // write out graph header
+    // Need 2 rows for hour indicator, then 2 rows for minute indicator 
+
+    let hour1 = "";
+    let hour2 = "";
+    let min1 = "";
+    let min2 = "";
+    for( let h = 0; h <= 24; ++h ){
+        for( let m = 0; m <= 60; ++m ){
+            hour1 += Math.floor(h /10) + "";
+            hour2 += h % 10 + "";
+            min1 += Math.floor(m / 10) + "";
+            min2 += m % 10 + "";
+        }
+
+    }
+
+    let prefix = pad(17,"","_");
+    graph += prefix + hour1 + "\n" + 
+            prefix + hour2 + "\n" + 
+            prefix + min1 + "\n" + 
+            prefix + min2 + "\n";
+ 
+    for( let g of guards.values()){
+        for( let d of g.daysOnShift.values()){
+            graph += `${pad(5,g.ID+"",'0')} - ${pad(2,""+d.month,'0')} - ${pad(2,""+d.day,'0')}: `;
+
+            for( let h of d.hours.values()){
+
+                h.minuteSleepStatus.forEach((val,index)=>{
+                    
+                });
+            }
+
+            graph += "\n"; // each new day is a line
+        }
+        
+    }
+
+    utility.writeAllText(filePath, graph);
 }
 
 
@@ -198,6 +247,7 @@ function populateGuardAsleepData(events: GuardEventType[]): Map<number,Guard>{
             
             if( lastTime.hour != g.time.hour){
                 // not sure what to do here
+                console.error("The hour changed, so we need to account for that being possible");
             }else {
                 if( !day.hours.has(g.time.hour)){
                     day.hours.set(g.time.hour, <Hour>{
