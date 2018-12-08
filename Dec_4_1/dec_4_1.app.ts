@@ -153,14 +153,15 @@ function mapGuardSleepingToFile(filePath: string, guards: Map<number,Guard>):voi
     for( let g of guards.values()){
         for( let d of g.daysOnShift.values()){
             graph += `${pad(5,g.ID+"",'0')} - ${pad(2,""+d.month,'0')} - ${pad(2,""+d.day,'0')}: `;
-
+            let hourMinArray = utility.range(0,24*60+59).map(()=>  " "); // make them all blank
             for( let h of d.hours.values()){
 
                 h.minuteSleepStatus.forEach((val,index)=>{
-                    
+                    let strIndex = h.hour * 60 + index;
+                    hourMinArray[strIndex] = val;
                 });
             }
-
+            graph += hourMinArray.join("");
             graph += "\n"; // each new day is a line
         }
         
