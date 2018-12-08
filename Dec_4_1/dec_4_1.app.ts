@@ -106,6 +106,7 @@ async function main(){
 
     let guardEvents = interpretEntries(entries);
     let guardSorted = sortGuardEvents(guardEvents);
+    printInput("./output/dec_4_1_sorted_input.txt", guardSorted);
     let guardSleepData = populateGuardAsleepData(guardSorted);
     // map this out to a file
     mapGuardSleepingToFile("./output/dec_4_1_graph.txt", guardSleepData);
@@ -121,6 +122,26 @@ async function main(){
     `);
 
     console.log(`Puzzle Awnser: ${maxGuardAsleep.ID * maxGuardAsleep.minuteWithMostAsleep.minute}`);
+}
+
+
+
+function printInput(filePath: string, events: GuardEventType[]){
+    let out = "";
+
+    for( let e of events){
+        out += `[${pad(4,e.time.year+"","0")}-${pad(2,e.time.month+"","0")}-${pad(2,e.time.day+"","0")} ${pad(2,e.time.hour+"","0")}:${pad(2,e.time.minute+"","0")}] `;
+        if( e.startShift ){
+            out += `Guard #${e.guardID} begins shift`;
+        }else if( e.fallsAsleep ){
+            out += "falls asleep";
+        }else if( e.wakesUp ){
+            out += "wakes up";
+        }
+        out += "\n";
+    }
+
+    utility.writeAllText(filePath, out);
 }
 
 
