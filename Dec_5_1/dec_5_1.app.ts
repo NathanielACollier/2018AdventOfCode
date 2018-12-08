@@ -28,15 +28,22 @@ How many units remain after fully reacting the polymer you scanned? (Note: in th
 
 async function main(){
     let entries = await utility.readInput("./dec_5_1/input.txt");
+    //let entries = ["dabAcCaCBAcCcaDA"];
     let formula = entries[0].split(''); // get all the characters individually
 
-    for( let i = 0; i < formula.length; ++i ){
-        if( i == 0 ) continue;
+    for( let i = 0; i < formula.length-1; ++i ){
 
-        if( formula[i].toUpperCase() == formula[i-1].toUpperCase()){
-            // remove both i and i-1
-            formula.splice(i-1,1);
-            formula.splice(i,1);
+        if( formula[i].toUpperCase() == formula[i+1].toUpperCase()){
+            formula.splice(i,2);
+
+            /*
+            go back a character because we've removed the one we are on, and it's neighbor so we need to go back over the character that slid into place
+             since i gets incrimented, the way to go over this new character is to decrement i, then it will be the next position looked at
+             but we need to consider the previous to where we where compared with the one that slid in so --2
+             However if we removed at position 0, then there is no previous and we just incriment 1
+             */
+            i -= (i==0) ? 1 : 2;
+
         }
     }
 
