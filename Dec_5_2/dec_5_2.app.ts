@@ -26,13 +26,30 @@ async function main(){
     let elements = utility.distinct(entries[0].toLowerCase().split(''));
     console.log(`Element Count: ${elements.length}`);
 
-    formula = reactAllElements(formula);
+    formula = formulaWithElementOccuringMostRemoved(elements, formula);
 
     utility.writeAllText("./output/dec_5_1_formula.txt", formula.join(""));
 
     console.log(`Count: ${formula.length}`);
 }
 
+
+function formulaWithElementOccuringMostRemoved(elements: Array<string>, formula: Array<string>): Array<string>{
+    let minFormula: Array<string> = undefined;
+
+    for( let e of elements){
+        let formulaWithoutE = formula.filter((val)=>{
+            return val.toUpperCase() !== e.toUpperCase();
+        });
+
+        let reacted = reactAllElements(formulaWithoutE);
+
+        if( !minFormula || reacted.length < minFormula.length){
+            minFormula = reacted;
+        }
+    }
+    return minFormula;
+}
 
 
 function reactAllElements(formula: Array<string>): Array<string>{
