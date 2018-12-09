@@ -32,8 +32,13 @@ async function main(){
     let formula = entries[0].split(''); // get all the characters individually
 
     for( let i = 0; i < formula.length-1; ++i ){
+        
+        // find the same letter with different case right next to each other
+        //  if it's the same letter and same case, then that's fine
+        if( formula[i].toUpperCase() == formula[i+1].toUpperCase() &&
+            formula[i] != formula[i+1]
+            ){
 
-        if( formula[i].toUpperCase() == formula[i+1].toUpperCase()){
             formula.splice(i,2);
 
             /*
