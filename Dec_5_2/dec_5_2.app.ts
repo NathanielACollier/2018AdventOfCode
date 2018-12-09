@@ -23,6 +23,8 @@ async function main(){
     let entries = await utility.readInput("./dec_5_2/input.txt");
     //let entries = ["dabAcCaCBAcCcaDA"];
     let formula = entries[0].split(''); // get all the characters individually
+    let elements = utility.distinct(entries[0].toLowerCase().split(''));
+    console.log(`Element Count: ${elements.length}`);
 
     formula = reactAllElements(formula);
 
